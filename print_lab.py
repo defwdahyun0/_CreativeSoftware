@@ -17,5 +17,5 @@ print("----------End--FILE--------")
 print("End=''    - ", a, b, end='=====\n')
 print("   sys.stdin - type ", type(sys.stdout))
 print("Next Line", end='=====\n', file=filep)
-print("Next Line", end='=====\n', file=filep, flsuh=True) # We don't know how to use it
+print("Next Line", end='=====\n', file=filep, flush=True) # We don't know how to use it
 filep.close()
