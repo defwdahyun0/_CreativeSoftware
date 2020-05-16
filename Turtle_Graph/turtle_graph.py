@@ -35,7 +35,7 @@ def turtleIndex(): #범례
         t.forward(20)
         idx+=1
 
-def turtleBar(a): #막대그래프를 그린다
+def turtleBar(a): #막대그래프
     t.reset()
     turtleAxis()
     square = [300,300]
@@ -44,45 +44,29 @@ def turtleBar(a): #막대그래프를 그린다
     for v in a:
         sum += v
     for height in a:
-       t.begin_fill()
-       t.fillcolor(colors[idx])#채우기 시작
-       idx+=1
-       t.left(90)
-       if square[0] == 500:
-           t.forward((height/sum)*square[0]) #해당비율만큼 그린다
-           x = t.xcor()
-           y = t.ycor()
-           t.penup()
-           t.setpos(0,(height/sum)*square[0])
-           t.write(str(height), False, "right", ("Times New Roman",8,"bold"))
-           t.setpos(x,y)
-           t.pendown()
-           t.right(90)
-           t.forward(50)
-           t.right(90)
-           t.forward((height/sum)*100) #해당비율만큼 그린다
-           t.left(90)
-           t.end_fill() #채우기 끝
-           t.hideturtle() #커서 보이지 않게
-       else:
-           t.forward((height/sum)*square[0])
-           x = t.xcor()
-           y = t.ycor()
-           t.penup()
-           t.setpos(0,(height/sum)*square[0])
-           t.write(str(height), False, "right", ("Times New Roman",8,"bold"))
-           t.setpos(x,y)
-           t.pendown()
-           t.right(90)
-           t.forward(25)
-           t.right(90)
-           t.forward((height/sum)*square[0])
-           t.left(90)
-           t.end_fill()
-           t.hideturtle()
+        t.begin_fill()
+        t.fillcolor(colors[idx])#채우기 시작
+        idx+=1
+        t.left(90)
+        #막대그래프를 그린다
+        t.forward((height/sum)*square[0])
+        x = t.xcor()
+        y = t.ycor()
+        t.penup()
+        t.setpos(0,(height/sum)*square[0]) #해당비율만큼 그린다
+        t.write(str(height), False, "right", ("Times New Roman",8,"bold"))
+        t.setpos(x,y)
+        t.pendown()
+        t.right(90)
+        t.forward(25)
+        t.right(90)
+        t.forward((height/sum)*square[0]) #해당비율만큼 그린다
+        t.left(90)
+        t.end_fill() #채우기 끝
+        t.hideturtle() #커서가 보이지 않게한다.
     turtleIndex()
 
-def turtlePie(a): #파이그래프를 그린다
+def turtlePie(a): #파이그래프
     t.reset()
     sum = 0
     num = 0
@@ -117,10 +101,5 @@ def turtlePie(a): #파이그래프를 그린다
 #main 함수
 if __name__ == "__main__":
     turtle.setup(square[0], square[1],0,0) #만약 +width라는 가변변수에 data
-
-    t.down() #펜으로 다시 그린다
-    t.color("black")
-    t.pensize(3)
-
     turtleBar([10, 20, 30, 20, 10])
     turtlePie([10, 20, 30, 20, 10])
