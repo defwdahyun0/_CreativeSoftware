@@ -17,7 +17,7 @@ youtube.com/watch?v=JHAcgz4XUK0&t=1085s
 ## 유의한 점
 위치가 정해져있을 때 그래프가 더욱 안정적일 것이라고 생각했기 때문에 (0,0)을 그래프들의 중심위치로 잡았다. 
 
-막대그래프를 그릴 때, (height/sum)square[0]을 막대그래프의 높이로 설정해서 square의 크기에 따라 그래프가 보기좋게 변하도록 했다.
+막대그래프를 그릴 때, ((height/sum)*square[0])을 막대그래프의 높이로 설정해서 square의 크기에 따라 그래프가 보기좋게 변하도록 했다.
 
 파이그래프를 그릴 때, t.write(str(round((percent*100),0))+"%", False, "left", ("Times New Roman",10,"bold"))로 퍼센트를 작성했고 가장 보기좋았던 위치인 "left"에 글씨를 위치시켰다.
 
