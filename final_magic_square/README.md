@@ -1274,8 +1274,7 @@ test_nxn 코드를 작성할 때 for문에서 돌아갈 list의 index를 결정�
 아래는 index값 결정에 관한 추가 설명이다. 짝수마방진의 코드를 가져왔다.
 
 1. 가로와 세로의 합    
-<pre><code>
-for i in range(int(nss)):
+<pre><code>for i in range(int(nss)):
     for j in range(int(nss)):
         sum5 = sum5 + a[j+nss*i] #가로 한줄의 합
         sum6 = sum6 + a[(nss)*j+i] #세로 한줄의 합
@@ -1290,8 +1289,7 @@ for i in range(int(nss)):
 일반화를 해보면 (nss)*j+i이라는 식을 얻을 수 있다.(이중 for문 활용)
 
 2. 대각선의 합
-<pre><code>
-for i in range(int(nss)):
+<pre><code>for i in range(int(nss)):
     sum7 = sum7 + a[(nss+1)*i] #오른쪽 대각선의 합
     sum8 = sum8 + a[(nss-1)*(i+1)] #왼쪽 대각선의 합
 
@@ -1306,8 +1304,7 @@ for i in range(int(nss)):
 일반화를 해보면 (nss-1)*(i+1)이라는 식을 얻을 수 있다.
 
 3. 4분할 partition의 합(마방진이 짝수일때만)
-<pre><code>
-for i in range(int(nss//2)):
+<pre><code>for i in range(int(nss//2)):
     for j in range(int(nss//2)):
         p1 = p1 + a[i + nss*j]
 for i in range(int(nss//2)):
@@ -1319,7 +1316,6 @@ for i in range(int(nss//2)):
 for i in range(int(nss//2)):
     for j in range(int(nss//2)):
         p4 = p4 + a[i+nss//2 + nss*(j+nss//2)]
-
 </code></pre>
 4분할의 합을 구할 때 가장 좋았던 것은, 분할의 개수가 유동적이지 않다는 점이었다. 
 그래서 4개 분할을 구하기 위해 for문을 4개를 사용했고, 각각 숫자를 나열하고 그림을 그려가며 값을 대입했다.     
