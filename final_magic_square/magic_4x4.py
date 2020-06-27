@@ -21,7 +21,7 @@ if (sumOfList % 4 != 0):
     print("Error : Sum is not times of 4", file=sys.stderr) #마방진을 풀 수 없다.
     exit()
 sumOfLine = sumOfList // 4
-print(sumOfLine)
+print("이 마방진에서 한 줄의 합은",sumOfLine,"이다.")
 
 # new_list_remove fucntion을 통해 list의 요소 제거
 def new_list_remove(src, a):
