@@ -5,24 +5,34 @@ import math
 result1 = False
 result2 = False
 
-file = open("magic3_output.txt","r") # magic_output.txt 파일을 읽기 모드(r)로 열기 4x4마방진을 읽었습니다.
+file = open("magic4_output.txt","r") #예시, 4x4 마방진 읽기.
 sum1 = sum2 = sum3 = sum4 = sum5 = sum6 = sum7 = sum8 = p1 = p2 = p3 = p4 = 0
 sumnumList = []
 
 try:  
-    line = None    # 변수 line을 None으로 초기화
+    line = None
     while line != '':
-
         line = file.readline()
-        inlst = line.strip('\n ')#print(line.strip('\n')) # 파일에서 읽어온 문자열에서 \n 삭제하여 출력
+        inlst = line.strip('\n ') #파일에서 읽어온 문자열에서 \n 삭제하여 출력
         inList = inlst.split(' ')
         numList = list(map(int, inList))
         ns = len(numList)
         nss = int(math.sqrt(ns))
 
+        sumOfList = sum(numList)
+        sumOfLine = sumOfList // nss
+
         sumnumList.append(numList)
 
-        if nss % 2 != 0: #홀수 마방진
+        if nss == 3: #3x3 마방진일 때.
+            if (numList[0]+numList[1]+numList[2] == numList[3]+numList[4]+numList[5] == numList[6]+numList[7]+numList[8] == numList[0]+numList[3]+numList[6] == numList[1]+numList[4]+numList[7] == numList[2]+numList[5]+numList[8] == numList[0]+numList[4]+numList[8] == numList[2]+numList[4]+numList[6] == sumOfLine): 
+                result1 = True
+            print('{} - {}'.format(inlst,result1)) #3x3 마방진의 성립 여부
+        elif nss == 4: #4x4 마방진일 때.
+            if (numList[0]+numList[1]+numList[2]+numList[3] == numList[4]+numList[5]+numList[6]+numList[7] == numList[8]+numList[9]+numList[10]+numList[11] == numList[12]+numList[13]+numList[14]+numList[15] == numList[0]+numList[4]+numList[8]+numList[12] == numList[1]+numList[5]+numList[9]+numList[13] == numList[2]+numList[6]+numList[10]+numList[14] == numList[3]+numList[7]+numList[11]+numList[15] == numList[0]+numList[5]+numList[10]+numList[15] == numList[3]+numList[6]+numList[9]+numList[12] == numList[0]+numList[1]+numList[4]+numList[5] == numList[2]+numList[3]+numList[6]+numList[7] == numList[8]+numList[9]+numList[12]+numList[13] == numList[10]+numList[11]+numList[14]+numList[15] == sumOfLine): 
+                result1 = True
+            print('{} - {}'.format(inlst,result1)) #4x4 마방진의 성립 여부
+        elif nss % 2 != 0: #홀수 마방진
             sum1 = sum2 = sum3 = sum4 = 0
             for i in range(int(nss)): 
                 for j in range(int(nss)):
@@ -34,7 +44,7 @@ try:
             if (sum1//nss == sum2//nss == sum3 == sum4):
                 result1 = True
             print('{} - {}'.format(inlst,result1)) #홀수 마방진의 성립 여부
-        else: #짝수 마방진
+        elif nss % 2 == 0: #짝수 마방진
             sum5 = sum6 = sum7 = sum8 = p1 = p2 = p3 = p4 = 0
             for i in range(int(nss)):
                 for j in range(int(nss)):
@@ -65,9 +75,8 @@ except EOFError:
     print("EOFError가 발생했습니다.")
 file.close()
 
-#print(sumnumList)
+#print(sumnumList) 
 #print(len(sumnumList))
-
 unique = []
 for s in sumnumList:
     if s not in unique:
@@ -76,3 +85,5 @@ for s in sumnumList:
 
 if len(sumnumList) == len(unique):
     print("중복이 없습니다.")
+else:
+    print("중복이 있습니다.")
