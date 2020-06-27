@@ -13,7 +13,7 @@
 	1. 코드가 정상적으로 작동한다.
 	2. 코드의 성능 및 가독성이 좋다.
 	3. 보도서의 품질 또한 우수하다.
-	4. 추가 프로그램 magix_nxn.py을 제출했다. 작은 수는 확실히 처리한다. (ex.3x3)
+	4. 추가 프로그램 magix_nxn.py을 제출했다.
 
 4가지 평가기준에서, 위와 같은 평가를 받는 것이 목표이다.
 
@@ -748,7 +748,6 @@ Execution Time = 121.7010543346405
 총 320 개의 답이 있습니다. 계산시간은 121.70106816291809 초 입니다. </code></pre>
 
 
-
 ## 2.2 magic_4x4.py - 위 3 x 3 마방진과 4x4 마방진으로 나온 답이 정확한지를 측정하는 테스트 프로그램
 
 	1. 입력은 1 로 나온 stdout 결과를 그대로 사용한다. 반드시 EOF에 대하 에러 처리가 있어야 함 (o)
@@ -758,12 +757,13 @@ Execution Time = 121.7010543346405
 	5. 출력은 stdout으로 결과를 다음예와 같이 출력한다. 2 1 3 2 1 4 2 3 5 - False (o)
 	6. 중복된 답이 있는지 점검 한다. (o)
 
-코드를 짜면서, 위 조건들을 만족시키도록 만들었다. 또한, nxn을 test하는 것이므로 3,4 뿐만 아니라 n개의 입력에도 동작하도록 만들었다.
+코드를 짜면서, 위 조건들을 만족시키도록 만들었다. 또한, nxn을 test하는 것이므로 3,4 뿐만 아니라 n개의 입력에도 동작하도록 만들었다. 그래도 정확한 결과를 위해 3x3과 4x4를 우선시해서 if문으로 처리했다.
 
 ### 실행코드
 <pre><code>import sys
 import math
 
+# 초기화
 result1 = False
 result2 = False
 
@@ -774,7 +774,6 @@ sumnumList = []
 try:  
     line = None
     while line != '':
-
         line = file.readline()
         inlst = line.strip('\n ') #파일에서 읽어온 문자열에서 \n 삭제하여 출력
         inList = inlst.split(' ')
@@ -782,9 +781,20 @@ try:
         ns = len(numList)
         nss = int(math.sqrt(ns))
 
+        sumOfList = sum(numList)
+        sumOfLine = sumOfList // nss
+
         sumnumList.append(numList)
 
-        if nss % 2 != 0: #홀수 마방진
+        if nss == 3: #3x3 마방진일 때.
+            if (numList[0]+numList[1]+numList[2] == numList[3]+numList[4]+numList[5] == numList[6]+numList[7]+numList[8] == numList[0]+numList[3]+numList[6] == numList[1]+numList[4]+numList[7] == numList[2]+numList[5]+numList[8] == numList[0]+numList[4]+numList[8] == numList[2]+numList[4]+numList[6] == sumOfLine): 
+                result1 = True
+            print('{} - {}'.format(inlst,result1)) #3x3 마방진의 성립 여부
+        elif nss == 4: #4x4 마방진일 때.
+            if (numList[0]+numList[1]+numList[2]+numList[3] == numList[4]+numList[5]+numList[6]+numList[7] == numList[8]+numList[9]+numList[10]+numList[11] == numList[12]+numList[13]+numList[14]+numList[15] == numList[0]+numList[4]+numList[8]+numList[12] == numList[1]+numList[5]+numList[9]+numList[13] == numList[2]+numList[6]+numList[10]+numList[14] == numList[3]+numList[7]+numList[11]+numList[15] == numList[0]+numList[5]+numList[10]+numList[15] == numList[3]+numList[6]+numList[9]+numList[12] == numList[0]+numList[1]+numList[4]+numList[5] == numList[2]+numList[3]+numList[6]+numList[7] == numList[8]+numList[9]+numList[12]+numList[13] == numList[10]+numList[11]+numList[14]+numList[15] == sumOfLine): 
+                result1 = True
+            print('{} - {}'.format(inlst,result1)) #4x4 마방진의 성립 여부
+        elif nss % 2 != 0: #홀수 마방진
             sum1 = sum2 = sum3 = sum4 = 0
             for i in range(int(nss)): 
                 for j in range(int(nss)):
@@ -796,7 +806,7 @@ try:
             if (sum1//nss == sum2//nss == sum3 == sum4):
                 result1 = True
             print('{} - {}'.format(inlst,result1)) #홀수 마방진의 성립 여부
-        else: #짝수 마방진
+        elif nss % 2 == 0: #짝수 마방진
             sum5 = sum6 = sum7 = sum8 = p1 = p2 = p3 = p4 = 0
             for i in range(int(nss)):
                 for j in range(int(nss)):
@@ -827,17 +837,15 @@ except EOFError:
     print("EOFError가 발생했습니다.")
 file.close()
 
-#print(sumnumList)
-#print(len(sumnumList))
-
 unique = []
 for s in sumnumList:
     if s not in unique:
         unique.append(s)
-#print(len(unique))
 
 if len(sumnumList) == len(unique):
-    print("중복이 없습니다.")</code></pre>
+    print("중복이 없습니다.")
+else:
+    print("중복이 있습니다.")</code></pre>
 
 test_nxn의 코드는 아래처럼 설명할 수 있다.
 
@@ -848,8 +856,7 @@ test_nxn의 코드는 아래처럼 설명할 수 있다.
 	5. 그리고 홀수 마방진과 짝수 마방진을 나누어서 체크한다. 수학적으로 index에 접근한다.
 	5-1. 홀수 마방진일 때, numList에서 가로, 세로, 대각선의 합이 모두 같은지 확인하고 같다면 result1의 값을 True로 변경한다.
 	5-2. 짝수 마방진일 때, numList에서 가로, 세로, 대각선, 그리고 4분할의 합이 모두 같은지 확인하고 같다면 result2의 값을 True로 변경한다.
-	6. 파일을 읽는 동안, numList를 2차원 리스트인 sumnumList 안에 넣는다. sumnumList의 길이와, 중복을 제거한 새로운 리스트 unique의 길이가 같다면 중복이 없다는 문장을 출력한다.
-
+	6. 파일을 읽는 동안, numList를 2차원 리스트인 sumnumList 안에 넣는다. sumnumList의 길이와, 중복을 제거한 새로운 리스트 unique의 길이가 같다면 중복이 없다는 문장을 출력한다.  
 
 ### 실행결과
 <pre><code>3 16 5 10 6 9 4 15 12 7 14 1 13 2 11 8 - True
@@ -1174,5 +1181,146 @@ test_nxn의 코드는 아래처럼 설명할 수 있다.
 16 13 4 1 3 2 15 14 9 12 5 8 6 7 10 11 - True
 중복이 없습니다.</code></pre>
 
+또한, 위 코드에서 임의로 중복을 만들어 실행했을 때도 "중복이 있습니다"가 잘 출력되는 것을 확인할 수 있다.
+
 # magic_nxn.py 을 작성한다.
 test_nxn의 코드를 활용해서, n을 받아와서 마방진을 출력하는 파일을 만든다.
+
+### 실행코드
+<pre><code>import sys
+import itertools as ii
+import time
+import math
+
+inList = input()
+print("stderr :", inList, file = sys.stderr)
+print("stdout :", inList, file = sys.stdout)
+inList = inList.split(" ")
+print("stderr :", inList, file = sys.stderr)
+print("stdout :", inList, file = sys.stdout)
+numList=[] 
+for a in inList:
+    numList.append(int(a))
+print("stderr :", numList, file = sys.stderr)
+print("stdout :", numList, file = sys.stdout)
+print(numList)
+
+ns = len(numList) # nxn 마방진의 길이
+nss = int(math.sqrt(ns)) # 그 때의 n
+
+sumOfList = sum(numList)
+if (sumOfList % nss != 0):
+    print("Error : Sum is not times of {}".format(nss), file=sys.stderr) #마방진을 풀 수 없다.
+    exit()
+sumOfLine = sumOfList // nss
+print(sumOfLine)
+
+match=0
+start = time.time()
+
+finallist = set(list(ii.permutations(numList, ns)))
+if nss % 2 != 0: #홀수 마방진
+    for a in finallist:
+        sum1 = sum2 = sum3 = sum4 = 0
+        for i in range(int(nss)):
+            for j in range(int(nss)):
+                sum1 = sum1 + a[j+nss*i] #가로 한 줄의 합
+                sum2 = sum2 + a[(nss)*j+i] #세로 한 줄의 합
+            sum3 = sum3 + a[(nss+1)*i] #오른쪽 대각선의 합
+            sum4 = sum4 + a[(nss-1)*(i+1)] #왼쪽 대각선의 합
+        if (sum1//nss == sum2//nss == sum3 == sum4 == sumOfLine):
+            print(a)
+            match+=1
+elif nss % 2 == 0: #짝수 마방진
+    for a in finallist: 
+        sum5 = sum6 = sum7 = sum8 = p1 = p2 = p3 = p4 = 0
+        for i in range(int(nss)):
+            for j in range(int(nss)):
+                sum5 = sum5 + a[j+nss*i] #가로 한줄의 합
+                sum6 = sum6 + a[(nss)*j+i] #세로 한줄의 합
+            sum7 = sum7 + a[(nss+1)*i] #오른쪽 대각선의 합
+            sum8 = sum8 + a[(nss-1)*(i+1)] #왼쪽 대각선의 합
+        # 4분할 partition의 합
+        for i in range(int(nss//2)):
+            for j in range(int(nss//2)):
+                p1 = p1 + a[i + nss*j]
+        for i in range(int(nss//2)):
+            for j in range(int(nss//2)):
+                p2 = p2 + a[nss//2 +i + nss*j]
+        for i in range(int(nss//2)):
+            for j in range(int(nss//2)):
+                p3 = p3 + a[i + nss*(j+nss//2)]
+        for i in range(int(nss//2)):
+            for j in range(int(nss//2)):
+                p4 = p4 + a[i+nss//2 + nss*(j+nss//2)]
+        if (sum5//nss == sum6//nss == sum7 == sum8 == p1 == p2 == p3 == p4):
+            print(a)
+            match+=1
+print("Total Match = ", match, file = sys.stderr)
+print("Execution Time =", time.time() - start, file = sys.stderr)
+print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)</code></pre>
+
+test_nxn의 코드는 아래처럼 설명할 수 있다.
+
+	1. input을 받는다. -> inList로 input을 받고(inList = input()), 공백에 따라 나누고(inList = inList.split(" ")), 숫자들의 리스트인 numList를 만든다.
+    2. set(list(ii.permutations(numList, ns)))을 이용해 numList 값으로 생성가능한 모든 집합들을 찾는다. 
+	3. 홀수 마방진과 짝수 마방진을 나누어서 조건을 체크한다. (수학적으로 index에 접근한다.)
+	3-1. 홀수 마방진일 때, numList에서 가로, 세로, 대각선의 합이 모두 같은지 확인하고 같다면 출력하고 match 값을 1 늘린다.
+	3-2. 짝수 마방진일 때, numList에서 가로, 세로, 대각선, 그리고 4분할의 합이 모두 같은지 확인하고 같다면 result2의 값을 출력하고 match 값을 1 늘린다.
+	4. 결과분석을 stderr에 출력한다.
+
+test_nxn 코드를 작성할 때 for문에서 돌아갈 list의 index를 결정하는 것이 핵심이었다.       
+마방진을 여러 개 그려보고 숫자들을 나열한 다음 규칙을 찾는 방법으로 인덱스들을 유추해낼 수 있었다. 
+
+아래는 index값 결정에 관한 추가 설명이다. 짝수마방진의 코드를 가져왔다.
+
+1. 가로와 세로의 합    
+<pre><code>
+for i in range(int(nss)):
+    for j in range(int(nss)):
+        sum5 = sum5 + a[j+nss*i] #가로 한줄의 합
+        sum6 = sum6 + a[(nss)*j+i] #세로 한줄의 합
+</code></pre>
+개인적으로 가장 어렵다고 생각했던 부분이다. 
+3x3에서 가로는 0,1,2/3,4,5/6,7,8이고, 4x4에서 세로는 0,1,2,3/4,5,6,7/8,9,10,11/12,13,14,15이다.
+일반화를 해보면 j+nss*i이라는 식을 얻을 수 있다.(이중 for문 활용)
+
+3x3에서 세로는 0,3,6/1,4,7/2,5,8이고, 4x4에서 세로는 0,4,8,12/1,5,9,13/2,6,10,14/3,7,11,15이다.      
+5x5에서 오른쪽 대각선은 4,8,12,16,20이다.
+일반화를 해보면 (nss)*j+i이라는 식을 얻을 수 있다.(이중 for문 활용)
+
+2. 대각선의 합
+<pre><code>
+for i in range(int(nss)):
+    sum7 = sum7 + a[(nss+1)*i] #오른쪽 대각선의 합
+    sum8 = sum8 + a[(nss-1)*(i+1)] #왼쪽 대각선의 합
+</code></pre>
+
+3x3에서 오른쪽 대각선은 0,4,8이고, 4x4에서 오른쪽 대각선은 0,5,10,15이다.      
+5x5에서 오른쪽 대각선은 0,6,12,18,24이다.
+일반화를 해보면 (n+1)*i이라는 식을 얻을 수 있다.
+
+마찬가지로, 3x3에서 오른쪽 대각선은 2,4,6이고, 4x4에서 오른쪽 대각선은 3,6,9,12이다.     
+5x5에서 오른쪽 대각선은 4,8,12,16,20이다.
+일반화를 해보면 (nss-1)*(i+1)이라는 식을 얻을 수 있다.
+
+3. 4분할 partition의 합
+<pre><code>
+for i in range(int(nss//2)):
+    for j in range(int(nss//2)):
+        p1 = p1 + a[i + nss*j]
+for i in range(int(nss//2)):
+    for j in range(int(nss//2)):
+        p2 = p2 + a[nss//2 +i + nss*j]
+for i in range(int(nss//2)):
+    for j in range(int(nss//2)):
+        p3 = p3 + a[i + nss*(j+nss//2)]
+for i in range(int(nss//2)):
+    for j in range(int(nss//2)):
+        p4 = p4 + a[i+nss//2 + nss*(j+nss//2)]
+</code></pre>
+4분할의 합을 구할 때 가장 좋았던 것은, 분할의 개수가 유동적이지 않다는 점이었다. 
+그래서 4개 분할을 구하기 위해 for문을 4개를 사용했고, 각각 숫자를 나열하고 그림을 그려가며 값을 대입했다.     
+nss//2씩 이동한다는 것이 특징이라고 볼 수도 있을 것이다.
+
+## 수업이 끝나고 나서도, 부족한 점들은 git commit을 활용해서 업데이트해갈 예정이다.
