@@ -1279,6 +1279,7 @@ for i in range(int(nss)):
     for j in range(int(nss)):
         sum5 = sum5 + a[j+nss*i] #가로 한줄의 합
         sum6 = sum6 + a[(nss)*j+i] #세로 한줄의 합
+
 </code></pre>
 개인적으로 가장 어렵다고 생각했던 부분이다. 
 3x3에서 가로는 0,1,2/3,4,5/6,7,8이고, 4x4에서 세로는 0,1,2,3/4,5,6,7/8,9,10,11/12,13,14,15이다.
@@ -1293,6 +1294,7 @@ for i in range(int(nss)):
 for i in range(int(nss)):
     sum7 = sum7 + a[(nss+1)*i] #오른쪽 대각선의 합
     sum8 = sum8 + a[(nss-1)*(i+1)] #왼쪽 대각선의 합
+
 </code></pre>
 
 3x3에서 오른쪽 대각선은 0,4,8이고, 4x4에서 오른쪽 대각선은 0,5,10,15이다.      
@@ -1317,6 +1319,7 @@ for i in range(int(nss//2)):
 for i in range(int(nss//2)):
     for j in range(int(nss//2)):
         p4 = p4 + a[i+nss//2 + nss*(j+nss//2)]
+
 </code></pre>
 4분할의 합을 구할 때 가장 좋았던 것은, 분할의 개수가 유동적이지 않다는 점이었다. 
 그래서 4개 분할을 구하기 위해 for문을 4개를 사용했고, 각각 숫자를 나열하고 그림을 그려가며 값을 대입했다.     
