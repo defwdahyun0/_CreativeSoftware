@@ -19,7 +19,7 @@ if (sumOfList % 3 != 0):
     print("Error : Sum is not times of 3", file=sys.stderr) #마방진을 풀 수 없다.
     exit()
 sumOfLine = sumOfList // 3
-print(sumOfLine)
+print("이 마방진에서 한 줄의 합은",sumOfLine,"이다.")
 
 num=0
 start= time.time()
