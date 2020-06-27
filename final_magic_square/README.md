@@ -1,115 +1,724 @@
-git.ajou.ac.kr 에 magic_square 프로젝트를 만든다. 
-readme.md 파일에 프로젝트 리포트를 작성한다. 리포트에는 프로젝트에 대한 설명, 코드에 대한 설명테스트 실행 결과 등이 들어 있어야 한다. 
-readme.md 파일, 소스코드, 테스트 입력 등을 zip으로 묶어 BB에 제출한다. 
+[AJOU 창의소프트웨어 입문] 
+기말과제 magic_square
+======================
 
-## 평가 방법
+# 1. 기말과제의 요구사항
 
-코드의 정상 작동 5점 (O)
-코드의 품질 5점 - 성능 및 가독성 (O)
-보도서의 품질 5점 (O)
-특별 점수 5점 - 만일 n x n 마방진을 n 값을 큰 수(예 11)를 처리 할 수 있도록 처리하고 결과를 함께 제출한 경우 5점을 추가로 받을 수 있음 (추가 프로그램 magix_nxn.py) (반점)
+## 1.1 평가기준
+	1. 코드의 정상 작동 5점 
+	2. 코드의 품질 5점 - 성능 및 가독성
+	3. 보고서의 품질 5점 
+	4. 특별 점수 5점 - 만일 n x n 마방진을 n 값을 큰 수(예 11)를 처리 할 수 있도록 처리하고 결과를 함께 제출한 경우 5점을 추가로 받을 수 있음 (추가 프로그램 magix_nxn.py)
 
-저는 magic_3x3, magic_4x4, test_nxn, magic_nxn(작은 수)를 구현하였습니다.
-코드의 성능을 측정할 때, 화면 출력과 text입력을 동시에 할 수 있도록 프로그램을 설계했습니다.
-1~9, 1~16까지의 숫자를 한 번씩 입력해 최종 수행시간을 측정했을 때, 3x3은  0.005초 4x4는 127초였습니다.
-최대한 수행시간을 줄이는 것에 우선시했고, 값들이 파일에 잘 저장될 수 있도록 처래했습니다.
+	1. 코드가 정상적으로 작동한다.
+	2. 코드의 성능 및 가독성이 좋다.
+	3. 보도서의 품질 또한 우수하다.
+	4. 추가 프로그램 magix_nxn.py을 제출했다. 작은 수는 확실히 처리한다. (ex.3x3)
 
-Users/dahyun/Documents/GitHub/creative_sw/final_magic/magic_3x3_.py
-1 2 3 4 5 6 7 8 9
-stderr : 1 2 3 4 5 6 7 8 9
-stdout : 1 2 3 4 5 6 7 8 9
-stderr : ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-stdout : ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-stderr : [1, 2, 3, 4, 5, 6, 7, 8, 9]
-stdout : [1, 2, 3, 4, 5, 6, 7, 8, 9]
-15
+4가지 평가기준에서, 위와 같은 평가를 받는 것이 목표이다.
+
+## 1.2 제출물
+*  magic_3x3.py, magic_4x4.py, test_nxn.py, magic_nxn.py
+*  magic3_output.txt, magic4_output.txt
+*  readme.md
+*  github 주소 링크
+
+# 2. 실행코드와 결과값
+실행코드의 주석은 생략하고, 글로 풀어서 설명하였다.
+
+## 2.1 magic_3x3.py
+
+	1. 가로/세로/대각선의 합이 같고, 입력숫자는 한번씩만 사용한다.
+	2. 입력숫자를 input 명령으로 사용자가 자유롭게 입력할 수 있도록 한다. ex) 1 1 1 1 1 1 1 1 1
+	3. 출력은 각각의 답을 한줄로 stdout 으로 다음 예와 같이 출력한다.  ex) 1 1 1 1 1 1 1 1 1
+	4. stderr에 다음과 예와 같이 출력한다.  ex) 총 1 개의 답이 있습니다. 계산시간은 총 3.45 초 입니다. 
+
+### 실행코드
+<pre><code>
+import sys
+import itertools as i
+import time
+
+inList = input()
+print("stderr :", inList, file = sys.stderr)
+print("stdout :", inList, file = sys.stdout)
+inList = inList.split(" ")
+print("stderr :", inList, file = sys.stderr)
+print("stdout :", inList, file = sys.stdout)
+numList=[]
+for a in inList:
+    numList.append(int(a))
+print("stderr :", numList, file = sys.stderr)
+print("stdout :", numList, file = sys.stdout)
+
+sumOfList = sum(numList)
+if (sumOfList % 3 != 0):
+    print("Error : Sum is not times of 3", file=sys.stderr) #마방진을 풀 수 없다.
+    exit()
+sumOfLine = sumOfList // 3
+print(sumOfLine)
+
+num=0
+start= time.time()
+file = open("magic3_output.txt","w")
+match = 0
+for a in set(numList):
+    L1 = numList.copy()
+    L1.remove(a)
+    for b in set(L1):
+        L2 = L1.copy()
+        L2.remove(b)
+        c = sumOfLine-a-b
+        if (not(c in L2)):
+            continue
+        else:
+            L3 = L2.copy()
+            L3.remove(c)
+            for d in set(L3):
+                L4 = L3.copy()
+                L4.remove(d)
+                for e in set(L4): 
+                    L5 = L4.copy()
+                    L5.remove(e)
+                    for f in set(L5):
+                        if (d+e+f != sumOfLine):
+                            continue
+                        L6 = L5.copy()
+                        L6.remove(f)
+                        for g in set(L6):
+                            if (a+d+g != sumOfLine):
+                                continue
+                            if (c+e+g != sumOfLine):
+                                continue
+                            L7 = L6.copy()
+                            L7.remove(g)
+                            for h in set(L7):
+                                if (b+e+h != sumOfLine):
+                                    continue
+                                L8 = L7.copy()
+                                L8.remove(h)
+                                for i in set(L8):
+                                    if (g+h+i == c+f+i == a+e+i == sumOfLine): 
+                                        print(a,b,c,d,e,f,g,h,i)
+                                        fstr = [str(a),str(b),str(c),str(d),str(e),str(f),str(g),str(h),str(i),'\n']
+                                        file.write(' '.join(fstr))
+                                        match += 1
+'''
+finallist = set(list(i.permutations(numList, 9)))
+for a in finallist:
+    if (a[0]+a[1]+a[2] == a[3]+a[4]+a[5] == a[6]+a[7]+a[8] == a[0]+a[3]+a[6] == a[1]+a[4]+a[7] == a[2]+a[5]+a[8] == a[0]+a[4]+a[8] == a[2]+a[4]+a[6] == sumOfLine): 
+        print(a)
+        num+=1
+'''
+file.close()
+print("Total Match = ", match, file = sys.stderr)
+print("Execution Time =", time.time() - start, file = sys.stderr)
+print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)
+</code></pre>
+
+magic_3x3의 코드는 아래처럼 설명할 수 있다.
+
+	1. input을 받는다. -> inList로 input을 받고(inList = input()), 공백에 따라 나누고(inList = inList.split(" ")), 숫자들의 리스트인 numList를 만들었다.
+	2. 한 줄의 합을 찾는다. -> sumOfList = sum(numList), sumOfList//3. 3x3 마방진이므로, 이 값은 15이다. sumOfList가 3의 배수가 아닐 때 에러 처리를 했다.
+	3. 변수를 초기화하고, 시간 측정을 시작하고, 파일을 연다.
+	4. 코드의 핵심! 이미 처리를 한 값들은 list에서 삭제한 뒤 copy하는 것을 반복해서 수행시간을 줄인다. 이 때, for문의 list에 set처리를 해줘야 중복을 걸러낼 수 있다.
+	5. 파일에 수행결과, 즉 마방진 값들을 입력하고 파일을 닫는다.
+	6. stderr에 수행결과 분석을 출력한다.
+
+set(list(i.permutations(numList, 9)))를 for문으로 돌려서 모든 변수들을 살펴본 후 가로, 세로, 대각선의 합이 같다는 조건을 쓰는 방법도 존재한다. 
+하지만 코드의 수행시간이 길어져서 과제에서는 채택하지 않았다.
+
+
+### 실행 결과
+
+magic3_output.txt에 마방진 출력, 수행 분석 결과는 stderr에 출력.
+
+#### 1 1 1 1 1 1 1 1 1 입력 
+
+<pre><code>
+1 1 1 1 1 1 1 1 1
+</code></pre>
+<pre><code>
+Total Match =  1
+Execution Time = 0.002989053726196289
+총 1 개의 답이 있습니다. 계산시간은 0.003008127212524414 초 입니다.
+</code></pre>
+
+#### 1 2 3 4 5 6 7 8 9 입력
+<pre><code>
+2 7 6 9 5 1 4 3 8
+2 9 4 7 5 3 6 1 8
+4 3 8 9 5 1 2 7 6
+4 9 2 3 5 7 8 1 6
+6 1 8 7 5 3 2 9 4
+6 7 2 1 5 9 8 3 4
+8 1 6 3 5 7 4 9 2
+8 3 4 1 5 9 6 7 2
+</code></pre>
+<pre><code>
 Total Match =  8
-Execution Time = 0.005904197692871094
-총 8 개의 답이 있습니다. 계산시간은 0.005926847457885742 초 입니다. 
+Execution Time = 0.004807949066162109
+총 8 개의 답이 있습니다. 계산시간은 0.004822969436645508 초 입니다. 
+</code></pre>
 
-dahyun@woodahyeon-ui-MacBookPro creative_sw % /Library/Frameworks/Python.framework/Versions/3.8/bin/python3 /Users/dahyun/Documents/GitHub/creative_sw/final_magic/magic_4x4.py
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
-stderr : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
-stdout : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
-stderr : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
-stdout : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16']
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-stderr : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-stdout : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-34
-Total Match =  320
-Execution Time = 127.0669367313385
-총 320 개의 답이 있습니다. 계산시간은 127.06694984436035 초 입니다. 
+#### 1 1 1 2 2 2 3 3 3 3 입력
+<pre><code>
+1 3 2 3 2 1 2 1 3
+2 1 3 3 2 1 1 3 2
+2 3 1 1 2 3 3 1 2
+3 1 2 1 2 3 2 3 1
+</code></pre>
+<pre><code>
+Total Match =  4
+Execution Time = 0.001416921615600586
+총 4 개의 답이 있습니다. 계산시간은 0.0014350414276123047 초 입니다. 
+</code></pre>
 
-아래는 제가 짠 python 코드에 대한 설명입니다.
-(추가 사항 import itertools - itertools를 사용하여도 됨, 중복된 list를 제거하는 함수 set() 이용 )
-
-# 3x3 마방진 - magic_3x3.py (가로/세로/대각선의 합이 같음, 입력숫자는 한번씩만 사용)
-입력숫자를 input 명령으로 사용자가 자유롭게 입력할 수 있도록 한다.(O)
-1 1 1 1 1 1 1 1 1
-출력은 각각의 답을 한줄로 stdout 으로 다음 예와 같이 출력하고 (O)
-1 1 1 1 1 1 1 1 1
-stderr에 다음과 예와 같이 출력한다.  (O)
-총 1 개의 답이 있습니다. 계산시간은 총 3.45 초 입니다. 
-
-magic_3x3의 조건을 모두 만족시켜서 코드를 작성했습니다. 
-
-우선 inList로 input을 받고, 공백에 따라 나누고, 숫자들을 빼내어 입력한 숫자들의 리스트인 numList를 만들었습니다. 
-이후, sumOfList 변수에 numList의 합을 저장하고, 3으로 나누어서 sumOfLine 변수에 한 줄의 합을 저장하였습니다. 3x3 마방진이므로, 이 값은 15가 됩니다.
-이 때 sumOfList 변수가 3의 배수가 아니었을 때 에러처리를 한 것이 신경 쓴 부분입니다. 
-
-3x3 마방진에서는 가로, 세로, 대각선의 합이 같다는 조건을 사용했습니다.
-이 후 변수를 초기화하고, 시간 측정을 시작하고, 파일을 열었습니다. 그 후 이미 입력한 것을 copy한 후 delete했습니다. 이 방식이 가장 수행시간을 줄일 수 있는 방법이라고 생각했습니다. 
-set(list(i.permutations(numList, 9)))를 for문으로 돌려서 모든 변수들을 살펴보고 조건으로 걸러내는 방법도 있는데, 코드의 길이는 매우 짧아지지만 수행시간이 길어져서 채택하지 않았습니다.
-
-이후 파일을 닫고, stederr에 수행결과를 출력하였습니다. 결과값은 파일과 stderr에 함께 출력하는 방식을 채택하였습니다. 코드를 보는 사람이 이해하기 쉽게 하기 위함입니다.
+## 2.2 magic_4x4.py
+    
+	1. 가로/세로/대각선과 1사분면, 2사분면, 3사분면, 4사분면의 합이 모두 같다. 입력된 숫자는 한번 만 사용하고, 만일 중복된 숫자가 있으면 중복된 횟수만큼 사용한다.
+	2. 입력숫자를 input 명령으로 사용자가 자유롭게 입력할 수 있도록 한다. ex)  1 2 3 4 5 6 7 8 9 10 10 11 13 14 14 15
+	3. 출력은 각각의 답을 한줄로 stdout 으로 다음 예와 같이 출력한다.  ex) 1 14 14 4 11 7 6 9 8 10 10 5 13 2 3 15
+	4. stderr에 다음과 예와 같이 출력한다.  ex) 총 XX 개의 답이 있습니다. 계산시간은 총 Y.YYYY 초 입니다.
 
 
-# 4x4  마방진 - magix_4x4.py (가로/세로/대각선과 1사분면, 2사분면, 3사분면, 4사분면의 합이 모두 같음, 입력된 숫자는 한번 만 사용, 만일 중복된 숫자가 있으면 중복된 횟수만큼 사용)
-입력숫자를 input 명령으로 사용자가 자유롭게 입력할 수 있도록 한다. (O)
-예)  1 2 3 4 5 6 7 8 9 10 10 11 13 14 14 15
-출력은 각각의 답을 한줄로 stdout으로 다음과 같이 모두 출력한다. (O)
-예) 1 14 14 4 11 7 6 9 8 10 10 5 13 2 3 15
-stderr에 다음 예와 같이 출력한다. (O)
-총 XX 개의 답이 있습니다. 계산시간은 총 Y.YYYY 초 입니다.
+### 실행코드
+<pre><code>
+import copy
+import sys
+import itertools as i
+import time
 
-magic_4x4의 조건을 모두 만족시켜서 코드를 작성했습니다. 
+inList = input()
+print("stderr :", inList, file = sys.stderr)
+print("stdout :", inList, file = sys.stdout)
+inList = inList.split(" ")
+print("stderr :", inList, file = sys.stderr)
+print("stdout :", inList, file = sys.stdout)
+numList=[]
+for a in inList:
+    numList.append(int(a))
+print(numList)
+print("stderr :", numList, file = sys.stderr)
+print("stdout :", numList, file = sys.stdout)
 
-우선 inList로 input을 받고, 공백에 따라 나누고, 숫자들을 빼내어 입력한 숫자들의 리스트인 numList를 만들었습니다. 
-이후, sumOfList 변수에 numList의 합을 저장하고, 3으로 나누어서 sumOfLine 변수에 한 줄의 합을 저장하였습니다. 4x4 마방진이므로, 이 값은 34가 됩니다.
-이 때 sumOfList 변수가 4의 배수가 아니었을 때 에러처리를 한 것이 신경 쓴 부분입니다. 
+sumOfList = sum(numList)
+if (sumOfList % 4 != 0):
+    print("Error : Sum is not times of 4", file=sys.stderr) #마방진을 풀 수 없다.
+    exit()
+sumOfLine = sumOfList // 4
+print(sumOfLine)
 
-4x4 마방진에서는 가로, 세로, 대각선, 4분할의 합이 모두 같다는 조건을 사용하였습니다.
-또한, 4x4 마방진에서는 new_list_remove fucntion을 새로 만들어서 list의 요소 제거하는 방법을 사용하였습니다.
-4x4 마방진 또한 set(list(i.permutations(numList,16)))을 사용하는 방법이 있지만, 수행시간이 매우 길어졌기 때문에 채택하지 않았습니다.
-파일을 생성하고 쓰는 과정 또한 코드에 작성했습니다.
+# new_list_remove fucntion을 통해 list의 요소 제거
+def new_list_remove(src, a):
+  new_list = copy.copy(src)
+  new_list.remove(a)
+  return new_list
 
-이후 파일을 닫고, stederr에 수행결과를 출력하였습니다. 결과값은 파일과 stderr에 함께 출력하는 방식을 채택하였습니다. 코드를 보는 사람이 이해하기 쉽게 하기 위함입니다.
+num=0
+start= time.time()
+file = open("magic4_output.txt","w")
+match = 0
+for a in set(numList):
+    blist = new_list_remove(numList, a)
+    for b in set(blist):
+        clist = new_list_remove(blist, b)
+        for c in set(clist):
+            dlist = new_list_remove(clist, c) 
+            for d in set(dlist):
+                if(a + b + c + d != sumOfLine): # 맨윗줄
+                    continue
+                elist = new_list_remove(dlist,d)
+                for e in set(elist):
+                    flist = new_list_remove(elist,e)
+                    for f in set(flist):
+                        if(a + b + e + f != sumOfLine):
+                            continue
+                        glist = new_list_remove(flist,f)
+                        for g in set(glist):
+                            hlist = new_list_remove(glist,g)
+                            for h in set(hlist):
+                                if (c + d + g + h != sumOfLine or e + f + g + h != sumOfLine):
+                                    continue
+                            ilist = new_list_remove(hlist,h)
+                            for i in set(ilist):
+                                jlist = new_list_remove(ilist,i)
+                                for j in set(jlist):
+                                    klist = new_list_remove(jlist,j)
+                                    for k in set(klist):
+                                        llist = new_list_remove(klist,k)
+                                        for l in set(llist):
+                                            if (i + j + k + l != sumOfLine):
+                                                continue
+                                            mlist = new_list_remove(llist,l)
+                                            for m in set(mlist):
+                                                if (a + e + i + m != sumOfLine or d + g+ j + m != sumOfLine):
+                                                    continue
+                                                nlist = new_list_remove(mlist,m)
+                                                for n in set(nlist):
+                                                    if (b+f+j+n != sumOfLine or i + j + m +n != sumOfLine):
+                                                        continue
+                                                    olist = new_list_remove(nlist,n)
+                                                    for o in set(olist):
+                                                        if (c+g+k+o != sumOfLine):
+                                                            continue
+                                                        plist = new_list_remove(olist,o)
+                                                        for p in set(plist):
+                                                            if ((m + n + o + p) != sumOfLine or (d + h + l + p) != sumOfLine):
+                                                                continue
+                                                            if ((a + f + k + p) != sumOfLine or (k + l + o + p) != sumOfLine):
+                                                                continue 
+                                                            print(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)
+                                                            fstr = [str(a),str(b),str(c),str(d),str(e),str(f),str(g),str(h),str(i),str(j),str(k),str(l),str(m),str(n),str(o),str(p),'\n']
+                                                            file.write(' '.join(fstr))
+                                                            match += 1
+file.close()
+print("Total Match = ", match, file = sys.stderr)
+print("Execution Time =", time.time() - start, file = sys.stderr)
+print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)
+</code></pre>
 
 
-# 위 3 x 3 마방진과 4x4 마방진으로 나온 답이 정확한지를 측정하는 테스트 프로그램 test_nxn.py 을 작성한다.
-입력은 1 로 나온 stdout 결과를 그대로 사용한다. 반드시 EOF에 대하 에러 처리가 있어야 함 (o)
-입력 숫자의 개수가 홀수n에 대해 n x n개가 아니면 False (o)
-input으로 입력된 n x n의 숫자를 str.split()으로 분리하고 int()로 변경하여 사용 (o)
-가로 세로 대각선의 합이 같으면 True 다른것이 있으면  False (o)
-출력은 stdout으로 결과를 다음예와 같이 출력한다. (o)
-2 1 3 2 1 4 2 3 5 - False (o)
-중복된 답이 있는지 점검 한다. (o)
+magic_4x4의 코드는 아래처럼 설명할 수 있다.
 
-test_nxn의 조건을 모두 만족시켜서 코드를 작성했습니다. 
+	1. input을 받는다. -> inList로 input을 받고(inList = input()), 공백에 따라 나누고(inList = inList.split(" ")), 숫자들의 리스트인 numList를 만들었다.
+	2. 한 줄의 합을 찾는다. -> sumOfList = sum(numList), sumOfList//4. 4x4 마방진이므로, 이 값은 34이다. sumOfList가 3의 배수가 아닐 때 에러 처리를 했다.
+	3. 변수를 초기화하고, 시간 측정을 시작하고, 파일을 연다.
+	4. 코드의 핵심! 이미 처리를 한 값들은 list에서 삭제한 뒤 copy하는 것을 반복해서 수행시간을 줄인다. 이 때, for문의 list에 set처리를 해줘야 중복을 걸러낼 수 있다.
+	5. 파일에 수행결과, 즉 마방진 값들을 입력하고 파일을 닫는다.
+	6. stderr에 수행결과 분석을 출력한다.
 
-우선 결과값과 sum변수들을 False와 0으로 초기화했습니다. 그리고 파일을 열었습니다. 이 때 try except 방식을 사용해서, EOF 에러 처리와 Value 에러 처리 과정을 거쳤습니다. 
-Value에러는 파일 끝의 공백 문자열 때문에 발생했는데, 필요없는 문자열이기 때문에 오류를 넘어가는 방식을 사용했습니다. 
 
-파일이 열린 동안, 파일에서 한 줄씩 결과값을 읽어왔습니다. 마방진을 만드는 코드와 비슷하게, inList에 str 결과값들을 받아와서 숫자로 이루어진 numList로 바꾸었습니다.
-그리고, ns와 nss라는 새로운 변수를 만들었습니다.  ns는 numList의 길이이고, nss는 ns의 제곱근입니다. 즉, nss는 nxn 마방진에서 n을 의미합니다.
+set(list(i.permutations(numList, 16)))를 for문으로 돌려서 모든 변수들을 살펴본 후 가로, 세로, 대각선, 그리고 4분할의 합이 같다는 조건을 쓰는 방법도 존재한다. 
+하지만 코드의 수행시간이 기하급수적으로 커져서 실행 결과를 내기 어려웠고, 과제에서는 채택할 수 없었다.
 
-그리고 홀수 마방진과 짝수 마방진을 나누어서 체크했습니다.
-홀수 마방진에서는 파일에서 읽어온 numList에서, 가로, 세로, 대각선의 합이 모두 같은지 확인하고 같다면 result1의 값을 True로 변경하였습니다.
-홀수 마방진에서는 파일에서 읽어온 numList에서, 가로, 세로, 대각선, 그리고 4분할의 합이 모두 같은지 확인하고 같다면 result2의 값을 True로 변경하였습니다.
 
-파일을 읽는 동안, numList를 sumnumList 안에 넣었습니다. 2차원 리스트를 만들어서, 중복 체크를 할 때 확인하기 위함입니다.
-sumnumList의 길이와, 중복을 제거한 unique의 길이가 같다면 중복이 없다는 것을 출력하도록 만들었습니다.
+
+## 2.2 magic_4x4.py - 위 3 x 3 마방진과 4x4 마방진으로 나온 답이 정확한지를 측정하는 테스트 프로그램
+
+
+	1. 입력은 1 로 나온 stdout 결과를 그대로 사용한다. 반드시 EOF에 대하 에러 처리가 있어야 함 (o)
+	2. 입력 숫자의 개수가 홀수n에 대해 n x n개가 아니면 False (o)
+	3. input으로 입력된 n x n의 숫자를 str.split()으로 분리하고 int()로 변경하여 사용 (o)
+	4. 가로 세로 대각선의 합이 같으면 True 다른것이 있으면  False (o)
+	5. 출력은 stdout으로 결과를 다음예와 같이 출력한다. 2 1 3 2 1 4 2 3 5 - False (o)
+	6. 중복된 답이 있는지 점검 한다. (o)
+
+코드를 짜면서, 위 조건들을 만족시키도록 만들었다. 또한, nxn을 test하는 것이므로 3,4 뿐만 아니라 n개의 입력에도 동작하도록 만들었다.
+
+### 실행코드
+<pre><code>
+import sys
+import math
+
+result1 = False
+result2 = False
+
+file = open("magic4_output.txt","r")
+sum1 = sum2 = sum3 = sum4 = sum5 = sum6 = sum7 = sum8 = p1 = p2 = p3 = p4 = 0
+sumnumList = []
+
+try:  
+    line = None    # 변수 line을 None으로 초기화
+    while line != '':
+
+        line = file.readline()
+        inlst = line.strip('\n ') # print(line.strip('\n'))
+        inList = inlst.split(' ')
+        numList = list(map(int, inList))
+        ns = len(numList)
+        nss = int(math.sqrt(ns))
+
+        sumnumList.append(numList)
+
+        if nss % 2 != 0: #홀수 마방진
+            sum1 = sum2 = sum3 = sum4 = 0
+            for i in range(int(nss)): 
+                for j in range(int(nss)):
+                    sum1 = sum1 + numList[j+nss*i] #가로 한 줄의 합
+                    sum2 = sum2 + numList[(nss)*j+i] #세로 한 줄의 합
+                sum3 = sum3 + numList[(nss+1)*i] #오른쪽 대각선의 합
+                sum4 = sum4 + numList[(nss-1)*(i+1)] #왼쪽 대각선의 합
+            #print(sum1//nss,sum2//nss,sum3,sum4)
+            if (sum1//nss == sum2//nss == sum3 == sum4):
+                result1 = True
+            print('{} - {}'.format(inlst,result1)) #홀수 마방진의 성립 여부
+        else: #짝수 마방진
+            sum5 = sum6 = sum7 = sum8 = p1 = p2 = p3 = p4 = 0
+            for i in range(int(nss)):
+                for j in range(int(nss)):
+                    sum5 = sum5 + numList[j+nss*i] #가로 한줄의 합
+                    sum6 = sum6 + numList[(nss)*j+i] #세로 한줄의 합
+                sum7 = sum7 + numList[(nss+1)*i] #오른쪽 대각선의 합
+                sum8 = sum8 + numList[(nss-1)*(i+1)] #왼쪽 대각선의 합
+            # 4분할 partition의 합
+            for i in range(int(nss//2)):
+                for j in range(int(nss//2)):
+                    p1 = p1 + numList[i + nss*j]
+            for i in range(int(nss//2)):
+                for j in range(int(nss//2)):
+                    p2 = p2 + numList[nss//2 +i + nss*j]
+            for i in range(int(nss//2)):
+                for j in range(int(nss//2)):
+                    p3 = p3 + numList[i + nss*(j+nss//2)]
+            for i in range(int(nss//2)):
+                for j in range(int(nss//2)):
+                    p4 = p4 + numList[i+nss//2 + nss*(j+nss//2)]
+            #print(sum5//nss,sum6//nss,sum7,sum8,p1,p2,p3,p4)
+            if (sum5//nss == sum6//nss == sum7 == sum8 == p1 == p2 == p3 == p4):
+                result2 = True
+            print('{} - {}'.format(inlst,result2)) #짝수 마방진의 성립 여부
+except ValueError:
+    pass
+except EOFError:
+    print("EOFError가 발생했습니다.")
+file.close()
+
+unique = []
+for s in sumnumList:
+    if s not in unique:
+        unique.append(s)
+
+if len(sumnumList) == len(unique):
+    print("중복이 없습니다.")
+</code></pre>
+
+test_nxn의 코드는 아래처럼 설명할 수 있다.
+
+	1. 결과값을 False로, sum변수들을 0으로 초기화한다.
+	2. 파일을 열고, 때 try except 방식을 사용해서, EOF 에러 처리와 Value 에러 처리를 한다. Value에러는 파일 끝의 공백 문자열 때문에 발생했는데 실행할 때 가장 마지막에 발생하고 결과에 영향을 안주는 오류이기 때문에 넘어갔다. 
+	3. 파일에서 한 줄씩 결과값을 읽어서 inList에 저장하고, 숫자로 이루어진 numList로 변환한다.
+	4. ns와 nss와 같은 변수를 만든다.  ns는 numList의 길이이고, nss는 ns의 제곱근입니다. 즉, nss는 nxn 마방진에서 n을 의미한다.
+	5. 그리고 홀수 마방진과 짝수 마방진을 나누어서 체크한다. 수학적으로 index에 접근한다.
+	5-1. 홀수 마방진일 때, numList에서 가로, 세로, 대각선의 합이 모두 같은지 확인하고 같다면 result1의 값을 True로 변경한다.
+	5-2. 짝수 마방진일 때, numList에서 가로, 세로, 대각선, 그리고 4분할의 합이 모두 같은지 확인하고 같다면 result2의 값을 True로 변경한다.
+	6. 파일을 읽는 동안, numList를 2차원 리스트인 sumnumList 안에 넣는다. sumnumList의 길이와, 중복을 제거한 새로운 리스트 unique의 길이가 같다면 중복이 없다는 문장을 출력한다.
+
+
+### 실행결과
+<pre><code>
+3 16 5 10 6 9 4 15 12 7 14 1 13 2 11 8 - True
+3 16 6 9 5 10 4 15 12 7 13 2 14 1 11 8 - True
+3 16 9 6 10 5 4 15 8 11 14 1 13 2 7 12 - True
+3 16 10 5 9 6 4 15 8 11 13 2 14 1 7 12 - True
+4 13 6 11 7 10 1 16 9 8 15 2 14 3 12 5 - True
+4 13 7 10 6 11 1 16 9 8 14 3 15 2 12 5 - True
+4 13 10 7 11 6 1 16 5 12 15 2 14 3 8 9 - True
+4 13 11 6 10 7 1 16 5 12 14 3 15 2 8 9 - True
+4 14 5 11 7 9 2 16 10 8 15 1 13 3 12 6 - True
+4 14 7 9 5 11 2 16 10 8 13 3 15 1 12 6 - True
+4 14 9 7 11 5 2 16 6 12 15 1 13 3 8 10 - True
+4 14 11 5 9 7 2 16 6 12 13 3 15 1 8 10 - True
+4 15 5 10 6 9 3 16 11 8 14 1 13 2 12 7 - True
+4 15 6 9 5 10 3 16 11 8 13 2 14 1 12 7 - True
+4 15 9 6 10 5 3 16 7 12 14 1 13 2 8 11 - True
+4 15 10 5 9 6 3 16 7 12 13 2 14 1 8 11 - True
+5 16 3 10 4 9 6 15 14 7 12 1 11 2 13 8 - True
+5 16 4 9 3 10 6 15 14 7 11 2 12 1 13 8 - True
+5 16 9 4 10 3 6 15 8 13 12 1 11 2 7 14 - True
+5 16 10 3 9 4 6 15 8 13 11 2 12 1 7 14 - True
+6 11 4 13 7 10 1 16 9 8 15 2 12 5 14 3 - True
+6 11 7 10 4 13 1 16 9 8 12 5 15 2 14 3 - True
+6 11 10 7 13 4 1 16 3 14 15 2 12 5 8 9 - True
+6 11 13 4 10 7 1 16 3 14 12 5 15 2 8 9 - True
+6 12 3 13 7 9 2 16 10 8 15 1 11 5 14 4 - True
+6 12 7 9 3 13 2 16 10 8 11 5 15 1 14 4 - True
+6 12 9 7 13 3 2 16 4 14 15 1 11 5 8 10 - True
+6 12 13 3 9 7 2 16 4 14 11 5 15 1 8 10 - True
+6 15 3 10 4 9 5 16 13 8 12 1 11 2 14 7 - True
+6 15 4 9 3 10 5 16 13 8 11 2 12 1 14 7 - True
+6 15 9 4 10 3 5 16 7 14 12 1 11 2 8 13 - True
+6 15 10 3 9 4 5 16 7 14 11 2 12 1 8 13 - True
+7 10 4 13 6 11 1 16 9 8 14 3 12 5 15 2 - True
+7 10 6 11 4 13 1 16 9 8 12 5 14 3 15 2 - True
+7 10 11 6 13 4 1 16 2 15 14 3 12 5 8 9 - True
+7 10 13 4 11 6 1 16 2 15 12 5 14 3 8 9 - True
+7 12 2 13 6 9 3 16 11 8 14 1 10 5 15 4 - True
+7 12 6 9 2 13 3 16 11 8 10 5 14 1 15 4 - True
+7 12 9 6 13 2 3 16 4 15 14 1 10 5 8 11 - True
+7 12 13 2 9 6 3 16 4 15 10 5 14 1 8 11 - True
+7 14 2 11 4 9 5 16 13 8 12 1 10 3 15 6 - True
+7 14 4 9 2 11 5 16 13 8 10 3 12 1 15 6 - True
+7 14 9 4 11 2 5 16 6 15 12 1 10 3 8 13 - True
+7 14 11 2 9 4 5 16 6 15 10 3 12 1 8 13 - True
+7 16 1 10 2 9 8 15 12 3 14 5 13 6 11 4 - True
+7 16 1 10 2 9 8 15 14 5 12 3 11 4 13 6 - True
+7 16 2 9 1 10 8 15 12 3 13 6 14 5 11 4 - True
+7 16 2 9 1 10 8 15 14 5 11 4 12 3 13 6 - True
+7 16 9 2 10 1 8 15 4 11 14 5 13 6 3 12 - True
+7 16 9 2 10 1 8 15 6 13 12 3 11 4 5 14 - True
+7 16 10 1 9 2 8 15 4 11 13 6 14 5 3 12 - True
+7 16 10 1 9 2 8 15 6 13 11 4 12 3 5 14 - True
+8 10 3 13 5 11 2 16 9 7 14 4 12 6 15 1 - True
+8 10 5 11 3 13 2 16 9 7 12 6 14 4 15 1 - True
+8 10 11 5 13 3 2 16 1 15 14 4 12 6 7 9 - True
+8 10 13 3 11 5 2 16 1 15 12 6 14 4 7 9 - True
+8 11 2 13 5 10 3 16 9 6 15 4 12 7 14 1 - True
+8 11 5 10 2 13 3 16 9 6 12 7 15 4 14 1 - True
+8 11 10 5 13 2 3 16 1 14 15 4 12 7 6 9 - True
+8 11 13 2 10 5 3 16 1 14 12 7 15 4 6 9 - True
+8 12 1 13 5 9 4 16 10 6 15 3 11 7 14 2 - True
+8 12 1 13 5 9 4 16 11 7 14 2 10 6 15 3 - True
+8 12 5 9 1 13 4 16 10 6 11 7 15 3 14 2 - True
+8 12 5 9 1 13 4 16 11 7 10 6 14 2 15 3 - True
+8 12 9 5 13 1 4 16 2 14 15 3 11 7 6 10 - True
+8 12 9 5 13 1 4 16 3 15 14 2 10 6 7 11 - True
+8 12 13 1 9 5 4 16 2 14 11 7 15 3 6 10 - True
+8 12 13 1 9 5 4 16 3 15 10 6 14 2 7 11 - True
+8 13 2 11 3 10 5 16 9 4 15 6 14 7 12 1 - True
+8 13 3 10 2 11 5 16 9 4 14 7 15 6 12 1 - True
+8 13 10 3 11 2 5 16 1 12 15 6 14 7 4 9 - True
+8 13 11 2 10 3 5 16 1 12 14 7 15 6 4 9 - True
+8 14 1 11 3 9 6 16 10 4 15 5 13 7 12 2 - True
+8 14 1 11 3 9 6 16 13 7 12 2 10 4 15 5 - True
+8 14 3 9 1 11 6 16 10 4 13 7 15 5 12 2 - True
+8 14 3 9 1 11 6 16 13 7 10 4 12 2 15 5 - True
+8 14 9 3 11 1 6 16 2 12 15 5 13 7 4 10 - True
+8 14 9 3 11 1 6 16 5 15 12 2 10 4 7 13 - True
+8 14 11 1 9 3 6 16 2 12 13 7 15 5 4 10 - True
+8 14 11 1 9 3 6 16 5 15 10 4 12 2 7 13 - True
+8 15 1 10 2 9 7 16 11 4 14 5 13 6 12 3 - True
+8 15 1 10 2 9 7 16 13 6 12 3 11 4 14 5 - True
+8 15 2 9 1 10 7 16 11 4 13 6 14 5 12 3 - True
+8 15 2 9 1 10 7 16 13 6 11 4 12 3 14 5 - True
+8 15 9 2 10 1 7 16 3 12 14 5 13 6 4 11 - True
+8 15 9 2 10 1 7 16 5 14 12 3 11 4 6 13 - True
+8 15 10 1 9 2 7 16 3 12 13 6 14 5 4 11 - True
+8 15 10 1 9 2 7 16 5 14 11 4 12 3 6 13 - True
+9 16 3 6 4 5 10 15 14 11 8 1 7 2 13 12 - True
+9 16 4 5 3 6 10 15 14 11 7 2 8 1 13 12 - True
+9 16 5 4 6 3 10 15 12 13 8 1 7 2 11 14 - True
+9 16 6 3 5 4 10 15 12 13 7 2 8 1 11 14 - True
+10 7 4 13 11 6 1 16 5 12 15 2 8 9 14 3 - True
+10 7 6 11 13 4 1 16 3 14 15 2 8 9 12 5 - True
+10 7 11 6 4 13 1 16 5 12 8 9 15 2 14 3 - True
+10 7 13 4 6 11 1 16 3 14 8 9 15 2 12 5 - True
+10 8 3 13 11 5 2 16 6 12 15 1 7 9 14 4 - True
+10 8 5 11 13 3 2 16 4 14 15 1 7 9 12 6 - True
+10 8 11 5 3 13 2 16 6 12 7 9 15 1 14 4 - True
+10 8 13 3 5 11 2 16 4 14 7 9 15 1 12 6 - True
+10 15 3 6 4 5 9 16 13 12 8 1 7 2 14 11 - True
+10 15 4 5 3 6 9 16 13 12 7 2 8 1 14 11 - True
+10 15 5 4 6 3 9 16 11 14 8 1 7 2 12 13 - True
+10 15 6 3 5 4 9 16 11 14 7 2 8 1 12 13 - True
+11 6 4 13 10 7 1 16 5 12 14 3 8 9 15 2 - True
+11 6 7 10 13 4 1 16 2 15 14 3 8 9 12 5 - True
+11 6 10 7 4 13 1 16 5 12 8 9 14 3 15 2 - True
+11 6 13 4 7 10 1 16 2 15 8 9 14 3 12 5 - True
+11 8 2 13 10 5 3 16 7 12 14 1 6 9 15 4 - True
+11 8 5 10 13 2 3 16 4 15 14 1 6 9 12 7 - True
+11 8 10 5 2 13 3 16 7 12 6 9 14 1 15 4 - True
+11 8 13 2 5 10 3 16 4 15 6 9 14 1 12 7 - True
+11 14 2 7 4 5 9 16 13 12 8 1 6 3 15 10 - True
+11 14 4 5 2 7 9 16 13 12 6 3 8 1 15 10 - True
+11 14 5 4 7 2 9 16 10 15 8 1 6 3 12 13 - True
+11 14 7 2 5 4 9 16 10 15 6 3 8 1 12 13 - True
+11 16 1 6 2 5 12 15 8 3 14 9 13 10 7 4 - True
+11 16 1 6 2 5 12 15 14 9 8 3 7 4 13 10 - True
+11 16 2 5 1 6 12 15 8 3 13 10 14 9 7 4 - True
+11 16 2 5 1 6 12 15 14 9 7 4 8 3 13 10 - True
+11 16 5 2 6 1 12 15 4 7 14 9 13 10 3 8 - True
+11 16 5 2 6 1 12 15 10 13 8 3 7 4 9 14 - True
+11 16 6 1 5 2 12 15 4 7 13 10 14 9 3 8 - True
+11 16 6 1 5 2 12 15 10 13 7 4 8 3 9 14 - True
+12 6 3 13 9 7 2 16 5 11 14 4 8 10 15 1 - True
+12 6 7 9 13 3 2 16 1 15 14 4 8 10 11 5 - True
+12 6 9 7 3 13 2 16 5 11 8 10 14 4 15 1 - True
+12 6 13 3 7 9 2 16 1 15 8 10 14 4 11 5 - True
+12 7 2 13 9 6 3 16 5 10 15 4 8 11 14 1 - True
+12 7 6 9 13 2 3 16 1 14 15 4 8 11 10 5 - True
+12 7 9 6 2 13 3 16 5 10 8 11 15 4 14 1 - True
+12 7 13 2 6 9 3 16 1 14 8 11 15 4 10 5 - True
+12 8 1 13 9 5 4 16 6 10 15 3 7 11 14 2 - True
+12 8 1 13 9 5 4 16 7 11 14 2 6 10 15 3 - True
+12 8 5 9 13 1 4 16 2 14 15 3 7 11 10 6 - True
+12 8 5 9 13 1 4 16 3 15 14 2 6 10 11 7 - True
+12 8 9 5 1 13 4 16 6 10 7 11 15 3 14 2 - True
+12 8 9 5 1 13 4 16 7 11 6 10 14 2 15 3 - True
+12 8 13 1 5 9 4 16 2 14 7 11 15 3 10 6 - True
+12 8 13 1 5 9 4 16 3 15 6 10 14 2 11 7 - True
+12 13 2 7 3 6 9 16 5 4 15 10 14 11 8 1 - True
+12 13 3 6 2 7 9 16 5 4 14 11 15 10 8 1 - True
+12 13 6 3 7 2 9 16 1 8 15 10 14 11 4 5 - True
+12 13 7 2 6 3 9 16 1 8 14 11 15 10 4 5 - True
+12 14 1 7 3 5 10 16 6 4 15 9 13 11 8 2 - True
+12 14 1 7 3 5 10 16 13 11 8 2 6 4 15 9 - True
+12 14 3 5 1 7 10 16 6 4 13 11 15 9 8 2 - True
+12 14 3 5 1 7 10 16 13 11 6 4 8 2 15 9 - True
+12 14 5 3 7 1 10 16 2 8 15 9 13 11 4 6 - True
+12 14 5 3 7 1 10 16 9 15 8 2 6 4 11 13 - True
+12 14 7 1 5 3 10 16 2 8 13 11 15 9 4 6 - True
+12 14 7 1 5 3 10 16 9 15 6 4 8 2 11 13 - True
+12 15 1 6 2 5 11 16 7 4 14 9 13 10 8 3 - True
+12 15 1 6 2 5 11 16 13 10 8 3 7 4 14 9 - True
+12 15 2 5 1 6 11 16 7 4 13 10 14 9 8 3 - True
+12 15 2 5 1 6 11 16 13 10 7 4 8 3 14 9 - True
+12 15 5 2 6 1 11 16 3 8 14 9 13 10 4 7 - True
+12 15 5 2 6 1 11 16 9 14 8 3 7 4 10 13 - True
+12 15 6 1 5 2 11 16 3 8 13 10 14 9 4 7 - True
+12 15 6 1 5 2 11 16 9 14 7 4 8 3 10 13 - True
+13 4 6 11 10 7 1 16 3 14 12 5 8 9 15 2 - True
+13 4 7 10 11 6 1 16 2 15 12 5 8 9 14 3 - True
+13 4 10 7 6 11 1 16 3 14 8 9 12 5 15 2 - True
+13 4 11 6 7 10 1 16 2 15 8 9 12 5 14 3 - True
+13 8 2 11 10 3 5 16 7 14 12 1 4 9 15 6 - True
+13 8 3 10 11 2 5 16 6 15 12 1 4 9 14 7 - True
+13 8 10 3 2 11 5 16 7 14 4 9 12 1 15 6 - True
+13 8 11 2 3 10 5 16 6 15 4 9 12 1 14 7 - True
+13 12 2 7 6 3 9 16 11 14 8 1 4 5 15 10 - True
+13 12 3 6 7 2 9 16 10 15 8 1 4 5 14 11 - True
+13 12 6 3 2 7 9 16 11 14 4 5 8 1 15 10 - True
+13 12 7 2 3 6 9 16 10 15 4 5 8 1 14 11 - True
+13 16 1 4 2 3 14 15 8 5 12 9 11 10 7 6 - True
+13 16 1 4 2 3 14 15 12 9 8 5 7 6 11 10 - True
+13 16 1 4 3 2 15 14 8 5 12 9 10 11 6 7 - True
+13 16 1 4 3 2 15 14 12 9 8 5 6 7 10 11 - True
+13 16 2 3 1 4 14 15 8 5 11 10 12 9 7 6 - True
+13 16 2 3 1 4 14 15 12 9 7 6 8 5 11 10 - True
+13 16 2 3 4 1 15 14 7 6 12 9 10 11 5 8 - True
+13 16 2 3 4 1 15 14 11 10 8 5 6 7 9 12 - True
+13 16 3 2 1 4 15 14 8 5 10 11 12 9 6 7 - True
+13 16 3 2 1 4 15 14 12 9 6 7 8 5 10 11 - True
+13 16 3 2 4 1 14 15 6 7 12 9 11 10 5 8 - True
+13 16 3 2 4 1 14 15 10 11 8 5 7 6 9 12 - True
+13 16 4 1 2 3 15 14 7 6 10 11 12 9 5 8 - True
+13 16 4 1 2 3 15 14 11 10 6 7 8 5 9 12 - True
+13 16 4 1 3 2 14 15 6 7 11 10 12 9 5 8 - True
+13 16 4 1 3 2 14 15 10 11 7 6 8 5 9 12 - True
+14 4 5 11 9 7 2 16 3 13 12 6 8 10 15 1 - True
+14 4 7 9 11 5 2 16 1 15 12 6 8 10 13 3 - True
+14 4 9 7 5 11 2 16 3 13 8 10 12 6 15 1 - True
+14 4 11 5 7 9 2 16 1 15 8 10 12 6 13 3 - True
+14 7 2 11 9 4 5 16 3 10 15 6 8 13 12 1 - True
+14 7 4 9 11 2 5 16 1 12 15 6 8 13 10 3 - True
+14 7 9 4 2 11 5 16 3 10 8 13 15 6 12 1 - True
+14 7 11 2 4 9 5 16 1 12 8 13 15 6 10 3 - True
+14 8 1 11 9 3 6 16 4 10 15 5 7 13 12 2 - True
+14 8 1 11 9 3 6 16 7 13 12 2 4 10 15 5 - True
+14 8 3 9 11 1 6 16 2 12 15 5 7 13 10 4 - True
+14 8 3 9 11 1 6 16 5 15 12 2 4 10 13 7 - True
+14 8 9 3 1 11 6 16 4 10 7 13 15 5 12 2 - True
+14 8 9 3 1 11 6 16 7 13 4 10 12 2 15 5 - True
+14 8 11 1 3 9 6 16 2 12 7 13 15 5 10 4 - True
+14 8 11 1 3 9 6 16 5 15 4 10 12 2 13 7 - True
+14 11 2 7 5 4 9 16 3 6 15 10 12 13 8 1 - True
+14 11 4 5 7 2 9 16 1 8 15 10 12 13 6 3 - True
+14 11 5 4 2 7 9 16 3 6 12 13 15 10 8 1 - True
+14 11 7 2 4 5 9 16 1 8 12 13 15 10 6 3 - True
+14 12 1 7 5 3 10 16 4 6 15 9 11 13 8 2 - True
+14 12 1 7 5 3 10 16 11 13 8 2 4 6 15 9 - True
+14 12 3 5 7 1 10 16 2 8 15 9 11 13 6 4 - True
+14 12 3 5 7 1 10 16 9 15 8 2 4 6 13 11 - True
+14 12 5 3 1 7 10 16 4 6 11 13 15 9 8 2 - True
+14 12 5 3 1 7 10 16 11 13 4 6 8 2 15 9 - True
+14 12 7 1 3 5 10 16 2 8 11 13 15 9 6 4 - True
+14 12 7 1 3 5 10 16 9 15 4 6 8 2 13 11 - True
+14 15 1 4 2 3 13 16 7 6 12 9 11 10 8 5 - True
+14 15 1 4 2 3 13 16 11 10 8 5 7 6 12 9 - True
+14 15 1 4 3 2 16 13 8 5 11 10 9 12 6 7 - True
+14 15 1 4 3 2 16 13 12 9 7 6 5 8 10 11 - True
+14 15 2 3 1 4 13 16 7 6 11 10 12 9 8 5 - True
+14 15 2 3 1 4 13 16 11 10 7 6 8 5 12 9 - True
+14 15 2 3 4 1 16 13 7 6 11 10 9 12 5 8 - True
+14 15 2 3 4 1 16 13 11 10 7 6 5 8 9 12 - True
+14 15 3 2 1 4 16 13 8 5 9 12 11 10 6 7 - True
+14 15 3 2 1 4 16 13 12 9 5 8 7 6 10 11 - True
+14 15 3 2 4 1 13 16 5 8 12 9 11 10 6 7 - True
+14 15 3 2 4 1 13 16 9 12 8 5 7 6 10 11 - True
+14 15 4 1 2 3 16 13 7 6 9 12 11 10 5 8 - True
+14 15 4 1 2 3 16 13 11 10 5 8 7 6 9 12 - True
+14 15 4 1 3 2 13 16 5 8 11 10 12 9 6 7 - True
+14 15 4 1 3 2 13 16 9 12 7 6 8 5 10 11 - True
+15 4 5 10 9 6 3 16 2 13 12 7 8 11 14 1 - True
+15 4 6 9 10 5 3 16 1 14 12 7 8 11 13 2 - True
+15 4 9 6 5 10 3 16 2 13 8 11 12 7 14 1 - True
+15 4 10 5 6 9 3 16 1 14 8 11 12 7 13 2 - True
+15 6 3 10 9 4 5 16 2 11 14 7 8 13 12 1 - True
+15 6 4 9 10 3 5 16 1 12 14 7 8 13 11 2 - True
+15 6 9 4 3 10 5 16 2 11 8 13 14 7 12 1 - True
+15 6 10 3 4 9 5 16 1 12 8 13 14 7 11 2 - True
+15 8 1 10 9 2 7 16 4 11 14 5 6 13 12 3 - True
+15 8 1 10 9 2 7 16 6 13 12 3 4 11 14 5 - True
+15 8 2 9 10 1 7 16 3 12 14 5 6 13 11 4 - True
+15 8 2 9 10 1 7 16 5 14 12 3 4 11 13 6 - True
+15 8 9 2 1 10 7 16 4 11 6 13 14 5 12 3 - True
+15 8 9 2 1 10 7 16 6 13 4 11 12 3 14 5 - True
+15 8 10 1 2 9 7 16 3 12 6 13 14 5 11 4 - True
+15 8 10 1 2 9 7 16 5 14 4 11 12 3 13 6 - True
+15 10 3 6 5 4 9 16 2 7 14 11 12 13 8 1 - True
+15 10 4 5 6 3 9 16 1 8 14 11 12 13 7 2 - True
+15 10 5 4 3 6 9 16 2 7 12 13 14 11 8 1 - True
+15 10 6 3 4 5 9 16 1 8 12 13 14 11 7 2 - True
+15 12 1 6 5 2 11 16 4 7 14 9 10 13 8 3 - True
+15 12 1 6 5 2 11 16 10 13 8 3 4 7 14 9 - True
+15 12 2 5 6 1 11 16 3 8 14 9 10 13 7 4 - True
+15 12 2 5 6 1 11 16 9 14 8 3 4 7 13 10 - True
+15 12 5 2 1 6 11 16 4 7 10 13 14 9 8 3 - True
+15 12 5 2 1 6 11 16 10 13 4 7 8 3 14 9 - True
+15 12 6 1 2 5 11 16 3 8 10 13 14 9 7 4 - True
+15 12 6 1 2 5 11 16 9 14 4 7 8 3 13 10 - True
+15 14 1 4 2 3 16 13 8 5 10 11 9 12 7 6 - True
+15 14 1 4 2 3 16 13 12 9 6 7 5 8 11 10 - True
+15 14 1 4 3 2 13 16 6 7 12 9 10 11 8 5 - True
+15 14 1 4 3 2 13 16 10 11 8 5 6 7 12 9 - True
+15 14 2 3 1 4 16 13 8 5 9 12 10 11 7 6 - True
+15 14 2 3 1 4 16 13 12 9 5 8 6 7 11 10 - True
+15 14 2 3 4 1 13 16 5 8 12 9 10 11 7 6 - True
+15 14 2 3 4 1 13 16 9 12 8 5 6 7 11 10 - True
+15 14 3 2 1 4 13 16 6 7 10 11 12 9 8 5 - True
+15 14 3 2 1 4 13 16 10 11 6 7 8 5 12 9 - True
+15 14 3 2 4 1 16 13 6 7 10 11 9 12 5 8 - True
+15 14 3 2 4 1 16 13 10 11 6 7 5 8 9 12 - True
+15 14 4 1 2 3 13 16 5 8 10 11 12 9 7 6 - True
+15 14 4 1 2 3 13 16 9 12 6 7 8 5 11 10 - True
+15 14 4 1 3 2 16 13 6 7 9 12 10 11 5 8 - True
+15 14 4 1 3 2 16 13 10 11 5 8 6 7 9 12 - True
+16 3 5 10 9 6 4 15 2 13 11 8 7 12 14 1 - True
+16 3 6 9 10 5 4 15 1 14 11 8 7 12 13 2 - True
+16 3 9 6 5 10 4 15 2 13 7 12 11 8 14 1 - True
+16 3 10 5 6 9 4 15 1 14 7 12 11 8 13 2 - True
+16 5 3 10 9 4 6 15 2 11 13 8 7 14 12 1 - True
+16 5 4 9 10 3 6 15 1 12 13 8 7 14 11 2 - True
+16 5 9 4 3 10 6 15 2 11 7 14 13 8 12 1 - True
+16 5 10 3 4 9 6 15 1 12 7 14 13 8 11 2 - True
+16 7 1 10 9 2 8 15 4 11 13 6 5 14 12 3 - True
+16 7 1 10 9 2 8 15 6 13 11 4 3 12 14 5 - True
+16 7 2 9 10 1 8 15 3 12 13 6 5 14 11 4 - True
+16 7 2 9 10 1 8 15 5 14 11 4 3 12 13 6 - True
+16 7 9 2 1 10 8 15 4 11 5 14 13 6 12 3 - True
+16 7 9 2 1 10 8 15 6 13 3 12 11 4 14 5 - True
+16 7 10 1 2 9 8 15 3 12 5 14 13 6 11 4 - True
+16 7 10 1 2 9 8 15 5 14 3 12 11 4 13 6 - True
+16 9 3 6 5 4 10 15 2 7 13 12 11 14 8 1 - True
+16 9 4 5 6 3 10 15 1 8 13 12 11 14 7 2 - True
+16 9 5 4 3 6 10 15 2 7 11 14 13 12 8 1 - True
+16 9 6 3 4 5 10 15 1 8 11 14 13 12 7 2 - True
+16 11 1 6 5 2 12 15 4 7 13 10 9 14 8 3 - True
+16 11 1 6 5 2 12 15 10 13 7 4 3 8 14 9 - True
+16 11 2 5 6 1 12 15 3 8 13 10 9 14 7 4 - True
+16 11 2 5 6 1 12 15 9 14 7 4 3 8 13 10 - True
+16 11 5 2 1 6 12 15 4 7 9 14 13 10 8 3 - True
+16 11 5 2 1 6 12 15 10 13 3 8 7 4 14 9 - True
+16 11 6 1 2 5 12 15 3 8 9 14 13 10 7 4 - True
+16 11 6 1 2 5 12 15 9 14 3 8 7 4 13 10 - True
+16 13 1 4 2 3 15 14 7 6 10 11 9 12 8 5 - True
+16 13 1 4 2 3 15 14 11 10 6 7 5 8 12 9 - True
+16 13 1 4 3 2 14 15 6 7 11 10 9 12 8 5 - True
+16 13 1 4 3 2 14 15 10 11 7 6 5 8 12 9 - True
+16 13 2 3 1 4 15 14 7 6 9 12 10 11 8 5 - True
+16 13 2 3 1 4 15 14 11 10 5 8 6 7 12 9 - True
+16 13 2 3 4 1 14 15 5 8 11 10 9 12 7 6 - True
+16 13 2 3 4 1 14 15 9 12 7 6 5 8 11 10 - True
+16 13 3 2 1 4 14 15 6 7 9 12 11 10 8 5 - True
+16 13 3 2 1 4 14 15 10 11 5 8 7 6 12 9 - True
+16 13 3 2 4 1 15 14 5 8 10 11 9 12 6 7 - True
+16 13 3 2 4 1 15 14 9 12 6 7 5 8 10 11 - True
+16 13 4 1 2 3 14 15 5 8 9 12 11 10 7 6 - True
+16 13 4 1 2 3 14 15 9 12 5 8 7 6 11 10 - True
+16 13 4 1 3 2 15 14 5 8 9 12 10 11 6 7 - True
+16 13 4 1 3 2 15 14 9 12 5 8 6 7 10 11 - True
+중복이 없습니다.
+</code></pre>
 
 # magic_nxn.py 을 작성한다.
-test_nxn의 코드를 활용해서, n을 받아와서 마방진을 출력하는 파일을 생성했습니다.
+test_nxn의 코드를 활용해서, n을 받아와서 마방진을 출력하는 파일을 만든다.
