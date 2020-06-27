@@ -34,8 +34,7 @@
 	4. stderr에 다음과 예와 같이 출력한다.  ex) 총 1 개의 답이 있습니다. 계산시간은 총 3.45 초 입니다. 
 
 ### 실행코드
-<pre><code>
-import sys
+<pre><code>import sys
 import itertools as i
 import time
 
@@ -113,8 +112,7 @@ for a in finallist:
 file.close()
 print("Total Match = ", match, file = sys.stderr)
 print("Execution Time =", time.time() - start, file = sys.stderr)
-print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)
-</code></pre>
+print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)</code></pre>
 
 magic_3x3의 코드는 아래처럼 설명할 수 있다.
 
@@ -135,18 +133,14 @@ magic3_output.txt에 마방진 출력, 수행 분석 결과는 stderr에 출력.
 
 #### 1 1 1 1 1 1 1 1 1 입력 
 
-<pre><code>
-1 1 1 1 1 1 1 1 1
-</code></pre>
-<pre><code>
+<pre><code>1 1 1 1 1 1 1 1 1
+
 Total Match =  1
 Execution Time = 0.002989053726196289
-총 1 개의 답이 있습니다. 계산시간은 0.003008127212524414 초 입니다.
-</code></pre>
+총 1 개의 답이 있습니다. 계산시간은 0.003008127212524414 초 입니다.</code></pre>
 
 #### 1 2 3 4 5 6 7 8 9 입력
-<pre><code>
-2 7 6 9 5 1 4 3 8
+<pre><code>2 7 6 9 5 1 4 3 8
 2 9 4 7 5 3 6 1 8
 4 3 8 9 5 1 2 7 6
 4 9 2 3 5 7 8 1 6
@@ -154,25 +148,19 @@ Execution Time = 0.002989053726196289
 6 7 2 1 5 9 8 3 4
 8 1 6 3 5 7 4 9 2
 8 3 4 1 5 9 6 7 2
-</code></pre>
-<pre><code>
+
 Total Match =  8
 Execution Time = 0.004807949066162109
-총 8 개의 답이 있습니다. 계산시간은 0.004822969436645508 초 입니다. 
-</code></pre>
+총 8 개의 답이 있습니다. 계산시간은 0.004822969436645508 초 입니다.</code></pre>
 
 #### 1 1 1 2 2 2 3 3 3 3 입력
-<pre><code>
-1 3 2 3 2 1 2 1 3
+<pre><code>1 3 2 3 2 1 2 1 3
 2 1 3 3 2 1 1 3 2
 2 3 1 1 2 3 3 1 2
 3 1 2 1 2 3 2 3 1
-</code></pre>
-<pre><code>
 Total Match =  4
 Execution Time = 0.001416921615600586
-총 4 개의 답이 있습니다. 계산시간은 0.0014350414276123047 초 입니다. 
-</code></pre>
+총 4 개의 답이 있습니다. 계산시간은 0.0014350414276123047 초 입니다. </code></pre>
 
 ## 2.2 magic_4x4.py
     
@@ -183,8 +171,7 @@ Execution Time = 0.001416921615600586
 
 
 ### 실행코드
-<pre><code>
-import copy
+<pre><code>import copy
 import sys
 import itertools as i
 import time
@@ -275,8 +262,7 @@ for a in set(numList):
 file.close()
 print("Total Match = ", match, file = sys.stderr)
 print("Execution Time =", time.time() - start, file = sys.stderr)
-print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)
-</code></pre>
+print("총 {} 개의 답이 있습니다. 계산시간은 {} 초 입니다. ".format(match,time.time() - start), file = sys.stderr)</code></pre>
 
 
 magic_4x4의 코드는 아래처럼 설명할 수 있다.
@@ -307,8 +293,7 @@ set(list(i.permutations(numList, 16)))를 for문으로 돌려서 모든 변수�
 코드를 짜면서, 위 조건들을 만족시키도록 만들었다. 또한, nxn을 test하는 것이므로 3,4 뿐만 아니라 n개의 입력에도 동작하도록 만들었다.
 
 ### 실행코드
-<pre><code>
-import sys
+<pre><code>import sys
 import math
 
 result1 = False
@@ -380,8 +365,7 @@ for s in sumnumList:
         unique.append(s)
 
 if len(sumnumList) == len(unique):
-    print("중복이 없습니다.")
-</code></pre>
+    print("중복이 없습니다.")</code></pre>
 
 test_nxn의 코드는 아래처럼 설명할 수 있다.
 
@@ -396,8 +380,7 @@ test_nxn의 코드는 아래처럼 설명할 수 있다.
 
 
 ### 실행결과
-<pre><code>
-3 16 5 10 6 9 4 15 12 7 14 1 13 2 11 8 - True
+<pre><code>3 16 5 10 6 9 4 15 12 7 14 1 13 2 11 8 - True
 3 16 6 9 5 10 4 15 12 7 13 2 14 1 11 8 - True
 3 16 9 6 10 5 4 15 8 11 14 1 13 2 7 12 - True
 3 16 10 5 9 6 4 15 8 11 13 2 14 1 7 12 - True
@@ -717,8 +700,7 @@ test_nxn의 코드는 아래처럼 설명할 수 있다.
 16 13 4 1 2 3 14 15 9 12 5 8 7 6 11 10 - True
 16 13 4 1 3 2 15 14 5 8 9 12 10 11 6 7 - True
 16 13 4 1 3 2 15 14 9 12 5 8 6 7 10 11 - True
-중복이 없습니다.
-</code></pre>
+중복이 없습니다.</code></pre>
 
 # magic_nxn.py 을 작성한다.
 test_nxn의 코드를 활용해서, n을 받아와서 마방진을 출력하는 파일을 만든다.
