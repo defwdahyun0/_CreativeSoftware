@@ -27,7 +27,6 @@ sumOfLine = sumOfList // nss
 print("이 마방진에서 한 줄의 합은",sumOfLine,"이다.")
 
 match=0
-file = open("magic_output.txt","w")
 start = time.time()
 
 hoochoo = 0 # 마방진 확인을 위한 변수, 우리집 고양이들의 이름.
