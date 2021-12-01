@@ -5,4 +5,4 @@
 ### Git 실습
 ### Python 학습
 ### 기말 프로젝트
-[5x5 마방진](https://github.com/defwdahyun0/_CreativeSoftware/tree/master/final_magic_square)
+[마방진 프로젝트](https://github.com/defwdahyun0/_CreativeSoftware/tree/master/final_magic_square)
